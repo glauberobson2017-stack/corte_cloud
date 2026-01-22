@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mostrar Dimensões SVG
 // @namespace    http://tampermonkey.net/
-// @version      2.2
+// @version      3.0
 // @description  Mostra as dimensões dos retângulos SVG com classe 'part' - Funciona em iframe
 // @author       Seu Nome
 // @match        https://marceneiro.cortecloud.com.br/*
@@ -68,7 +68,6 @@
 
             log('Inicializando script de dimensões...');
             startRectDetection();
-            createButton();
             setupKeyboardEvents();
         }
 
@@ -109,10 +108,10 @@
         }
 
         // Verificação imediata
-        if (!checkRects()) {
-            // Se não encontrou, tentar novamente após um atraso (pode ser carregamento dinâmico)
-            setTimeout(checkRects, 1000);
-        }
+        // if (!checkRects()) {
+        //     // Se não encontrou, tentar novamente após um atraso (pode ser carregamento dinâmico)
+        //     setTimeout(checkRects, 1000);
+        // }
 
         // Observar mudanças no DOM
         const observer = new MutationObserver(function(mutations) {
@@ -126,116 +125,6 @@
         observer.observe(document.body, { childList: true, subtree: true });
     }
 
-    function createButton() {
-        // Remove switch existente
-        const existingSwitch = document.getElementById('dimensions-toggle-switch');
-        if (existingSwitch) existingSwitch.remove();
-
-        // Container do switch
-        const switchContainer = document.createElement('div');
-        switchContainer.id = 'dimensions-toggle-switch';
-
-        Object.assign(switchContainer.style, {
-            position: 'fixed',
-            bottom: '20px',
-            right: '20px',
-            zIndex: '999999',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '10px'
-        });
-
-        // Label
-        const label = document.createElement('label');
-        label.textContent = 'Dimensões';
-        Object.assign(label.style, {
-            fontSize: '14px',
-            fontWeight: 'bold',
-            fontFamily: 'Arial, sans-serif',
-            color: '#333',
-            cursor: 'pointer',
-            userSelect: 'none'
-        });
-
-        // Switch
-        const switchBox = document.createElement('input');
-        switchBox.type = 'checkbox';
-        switchBox.id = 'dimensions-toggle-checkbox';
-
-        Object.assign(switchBox.style, {
-            width: '50px',
-            height: '28px',
-            cursor: 'pointer',
-            appearance: 'none',
-            WebkitAppearance: 'none',
-            background: '#ccc',
-            borderRadius: '14px',
-            border: 'none',
-            outline: 'none',
-            transition: 'all 0.3s',
-            position: 'relative',
-            padding: 0
-        });
-
-        // Estilo do switch com pseudo-elementos via CSS
-        const style = document.createElement('style');
-        style.textContent = `
-            #dimensions-toggle-checkbox {
-                appearance: none;
-                -webkit-appearance: none;
-                width: 50px;
-                height: 28px;
-                background: #ccc;
-                border-radius: 14px;
-                border: 2px solid #999;
-                cursor: pointer;
-                outline: none;
-                transition: all 0.3s ease;
-                box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-            }
-
-            #dimensions-toggle-checkbox:checked {
-                background: #4CAF50;
-                border-color: #2e7d32;
-            }
-
-            #dimensions-toggle-checkbox:hover {
-                box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 0 8px rgba(0,0,0,0.2);
-            }
-
-            #dimensions-toggle-switch {
-                background: white;
-                padding: 8px 12px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            }
-
-            #dimensions-toggle-switch label {
-                margin: 0;
-            }
-        `;
-        document.head.appendChild(style);
-
-        switchBox.addEventListener('change', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            toggleDimensions();
-            updateSwitch();
-        });
-
-        switchContainer.appendChild(label);
-        switchContainer.appendChild(switchBox);
-        document.body.appendChild(switchContainer);
-        updateSwitch();
-    }
-
-    function updateSwitch() {
-        const checkbox = document.getElementById('dimensions-toggle-checkbox');
-        if (!checkbox) return;
-
-        const hasTexts = document.querySelectorAll('text.dimension-text').length > 0;
-        checkbox.checked = hasTexts;
-    }
 
     function setupKeyboardEvents() {
         log('Configurando eventos de teclado...');
@@ -362,7 +251,10 @@
                 text.setAttribute('y', centerY);
                 text.setAttribute('text-anchor', 'middle');
                 text.setAttribute('dominant-baseline', 'central');
-                text.setAttribute('fill', '#ff0000');
+                   // Verificar se o rect tem classe "rotate" para definir cores com contraste
+                   const isRotateRect = rect.classList.contains('rotate');
+                   const textColor = isRotateRect ? '#FFFF00' : '#ff0000'; // Amarelo para rotate, vermelho para outros
+                   text.setAttribute('fill', textColor);
                 text.setAttribute('stroke', '#000000');
                 text.setAttribute('stroke-width', '2');
                 text.setAttribute('stroke-opacity', '0.7');
@@ -372,7 +264,7 @@
                 // Rodar 90 graus se height > width
                 if (height > width) {
                     // Aumentar fonte quando rotacionado
-                    fontSize = Math.min(height / 5, width / 2, 100);
+                    fontSize = Math.min(height / 5, width / 1.2, 100);
                     text.setAttribute('transform', `rotate(90, ${centerX}, ${centerY})`);
                     log(`Rotacionado texto do rect ${index}: height (${Math.round(height)}) > width (${Math.round(width)}), fontSize: ${fontSize}`);
                 }
