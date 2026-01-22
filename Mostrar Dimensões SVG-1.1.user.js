@@ -308,6 +308,12 @@
                 text.setAttribute('font-weight', 'bold');
                 text.setAttribute('font-family', 'Arial, sans-serif');
 
+                // Rodar 90 graus se height > width
+                if (height > width) {
+                    text.setAttribute('transform', `rotate(90, ${centerX}, ${centerY})`);
+                    log(`Rotacionado texto do rect ${index}: height (${Math.round(height)}) > width (${Math.round(width)})`);
+                }
+
                 text.textContent = `${Math.round(height)} × ${Math.round(width)}`;
 
                 // Adicionar ao SVG
