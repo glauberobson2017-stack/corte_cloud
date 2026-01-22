@@ -3,7 +3,7 @@
 // @namespace    http://tampermonkey.net/
 // @version      3.0
 // @description  Mostra as dimensões dos retângulos SVG com classe 'part' - Funciona em iframe
-// @author       Seu Nome
+// @author       GR
 // @match        https://marceneiro.cortecloud.com.br/*
 // @match        https://interactiveplan.cortecloud.com/*
 // @grant        none
