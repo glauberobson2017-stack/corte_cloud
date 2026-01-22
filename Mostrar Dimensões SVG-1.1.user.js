@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mostrar Dimensões SVG
 // @namespace    http://tampermonkey.net/
-// @version      1.0
+// @version      1.1
 // @description  Mostra as dimensões dos retângulos SVG com classe 'part' ao pressionar Ctrl+Shift+Alt+B
 // @author       Seu Nome
 // @match        https://marceneiro.cortecloud.com.br/*
