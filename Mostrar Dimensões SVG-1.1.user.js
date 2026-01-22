@@ -184,16 +184,17 @@
             }
 
             // Ctrl + Shift + Alt + T (toggle)
-            if (event.ctrlKey && event.shiftKey && event.altKey && event.key.toLowerCase() === 't') {
+            if (event.key.toLowerCase() === 't') {
                 event.preventDefault();
                 const hasTexts = document.querySelectorAll('text.dimension-text').length > 0;
+                console.log("T")
                 if (hasTexts) {
                     removerDimensoes();
                 } else {
                     adicionarDimensoes();
                 }
                 return;
-                console.log("T")
+                
             }
 
         });
