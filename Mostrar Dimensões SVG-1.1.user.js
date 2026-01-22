@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Mostrar Dimensões SVG
 // @namespace    http://tampermonkey.net/
-// @version      2.0
+// @version      2.1
 // @description  Mostra as dimensões dos retângulos SVG com classe 'part' - Funciona em iframe
 // @author       Seu Nome
 // @match        https://marceneiro.cortecloud.com.br/*
